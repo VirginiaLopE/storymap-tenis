@@ -1,40 +1,35 @@
 {
   "version": 8,
-  "name": "estilo",
+  "name": "Mapa Base Limpio",
   "metadata": {"maputnik:renderer": "mlgljs"},
   "sources": {
     "openmaptiles": {
       "type": "vector",
       "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=sGq3I5XV0ASFmUtS4VjC"
     }
-  
-    "2kowjjh": {
-    "type": "vector", 
-    "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=sGq3I5XV0ASFmUtS4VjC"
-}
   },
   "sprite": "https://api.maptiler.com/maps/basic-v2/sprite",
-  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=sGq3I5XV0ASFmUtS4VjC",,
+  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=sGq3I5XV0ASFmUtS4VjC",
   "layers": [
     {
-      "id": "fondo",
+      "id": "background",
       "type": "background",
-      "paint": {"background-color": "rgba(201, 245, 178, 1)"}
+      "paint": {"background-color": "#242424"}
     },
     {
-      "id": "agua",
+      "id": "water",
       "type": "fill",
       "source": "openmaptiles",
       "source-layer": "water",
-      "paint": {"fill-color": "rgba(143, 216, 206, 1)"}
+      "paint": {"fill-color": "#1a1a1a"}
     },
     {
-      "id": "frontera",
+      "id": "countries",
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "boundary",
-      "paint": {"line-color": "rgba(166, 166, 166, 1)"}
+      "filter": ["==", "admin_level", 2],
+      "paint": {"line-color": "#3d3d3d", "line-width": 1}
     }
-  ],
-  "id": "jyk49vh"
+  ]
 }
