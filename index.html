@@ -7,12 +7,28 @@
     <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; display: flex; }
-        #sidebar { width: 350px; height: 100vh; overflow-y: auto; background: #2c3e50; color: white; z-index: 10; }
+        #sidebar { 
+    width: 350px; 
+    height: 100vh; 
+    overflow-y: auto; 
+    background: #111111;
+    color: white; 
+    z-index: 10; 
+}
         #map { flex: 1; height: 100vh; }
-        .header { padding: 20px; background: #1a252f; text-align: center; border-bottom: 3px solid #3498db; }
+        .header { 
+    padding: 20px; 
+    background: #000000; /* Fondo negro puro para el título */
+    text-align: center; 
+    border-bottom: 3px solid #ccff00;
+    }
         .capitulo { padding: 15px; border-bottom: 1px solid #3e5871; cursor: pointer; transition: 0.3s; }
         .capitulo:hover { background: #34495e; border-left: 5px solid #3498db; }
-        .capitulo h2 { margin: 0; font-size: 1.1em; color: #3498db; }
+        .capitulo h2 { 
+    margin: 0; 
+    font-size: 1.1em; 
+    color: #ccff00; /* Títulos en verde tenis */
+}
         .capitulo p { margin: 5px 0 0; font-size: 0.85em; color: #bdc3c7; }
         /* Estilo del Tooltip */
         .maplibregl-popup-content { padding: 15px; border-radius: 10px; max-width: 250px; }
@@ -78,26 +94,69 @@
 
 <script>
     const map = new maplibregl.Map({
-        container: 'map',
-        style: 'estilo.json', 
-        center: [0, 20],
-        zoom: 2
-    });
+    container: 'map',
+    style: 'estilo.json', 
+    center: [0, 20],
+    zoom: 2,
+    fadeDuration: 0,
+    trackResize: false
+});
 
     const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '300px' });
 
-    function presentarPunto(lon, lat, titulo, desc, img) {
-        // Mover el mapa
-        map.flyTo({ center: [lon, lat], zoom: 14, pitch: 40, essential: true });
+    // 1. Configuración de la pelota (solo una vez)
+map.on('load', function () {
+    map.loadImage('https://cdn-icons-png.flaticon.com/512/3163/3163634.png', function(error, image) {
+        if (error) throw error;
+        map.addImage('pelota', image);
 
-        // Crear el Tooltip con la imagen y descripción
-        const html = `
-            <img class="popup-img" src="${img}" onerror="this.src='https://via.placeholder.com/250x150?text=Foto+del+Estadio'">
-            <h3 style="margin:0; font-size:16px;">${titulo}</h3>
+        map.addSource('punto-activo', {
+            'type': 'geojson',
+            'data': { 'type': 'FeatureCollection', 'features': [] }
+        });
+
+        map.addLayer({
+            'id': 'capa-pelota',
+            'type': 'symbol',
+            'source': 'punto-activo',
+            'layout': {
+                'icon-image': 'pelota',
+                'icon-size': 0.08, 
+                'icon-allow-overlap': true
+            }
+        });
+    });
+});
+
+// 2. La función de vuelo (solo una vez)
+function presentarPunto(lon, lat, titulo, desc, img) {
+    // El mapa vuela al sitio
+    map.flyTo({ center: [lon, lat], zoom: 14, pitch: 40, essential: true });
+
+    // Preparamos la posición de la pelota
+    const geojson = {
+        'type': 'FeatureCollection',
+        'features': [{
+            'type': 'Feature',
+            'geometry': { 'type': 'Point', 'coordinates': [lon, lat] }
+        }]
+    };
+    
+    // Si la capa de la pelota está lista, la movemos
+    if (map.getSource('punto-activo')) {
+        map.getSource('punto-activo').setData(geojson);
+    }
+
+    // Creamos y mostramos el Tooltip con la foto de Wikipedia
+    const html = `
+        <div style="text-align:center;">
+            <img class="popup-img" src="${img}" onerror="this.src='https://via.placeholder.com/250x150?text=Foto+del+Estadio'" style="width:100%; border-radius:5px;">
+            <h3 style="margin:5px 0 0; font-size:16px;">${titulo}</h3>
             <p style="margin:5px 0 0; font-size:13px; color:#555;">${desc}</p>
-        `;
-
-        popup.setLngLat([lon, lat]).setHTML(html).addTo(map);
+        </div>
+    `;
+    popup.setLngLat([lon, lat]).setHTML(html).addTo(map);
+}
     }
 </script>
 
