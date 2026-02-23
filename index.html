@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Tour ATP - Mi Story Map</title>
+    <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; display: flex; }
+        #sidebar { width: 350px; height: 100vh; overflow-y: auto; background: #2c3e50; color: white; z-index: 10; }
+        #map { flex: 1; height: 100vh; }
+        .header { padding: 20px; background: #1a252f; text-align: center; border-bottom: 3px solid #3498db; }
+        .capitulo { padding: 15px; border-bottom: 1px solid #3e5871; cursor: pointer; transition: 0.3s; }
+        .capitulo:hover { background: #34495e; border-left: 5px solid #3498db; }
+        .capitulo h2 { margin: 0; font-size: 1.1em; color: #3498db; }
+        .capitulo p { margin: 5px 0 0; font-size: 0.85em; color: #bdc3c7; }
+        /* Estilo del Tooltip */
+        .maplibregl-popup-content { padding: 15px; border-radius: 10px; max-width: 250px; }
+        .popup-img { width: 100%; border-radius: 5px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <div class="header"><h1>Tour ATP</h1><p>Temporada de Tenis</p></div>
+    
+    <div class="capitulo" onclick="presentarPunto(144.978, -37.822, 'Australian Open', 'Cuartos de final (perdió ante Novak Djokovic)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Melbourne_Park_-_Tennis.jpg/500px-Melbourne_Park_-_Tennis.jpg')">
+        <h2>Australian Open</h2><p>Alcaraz llegaba a este torneo con la presión de conquistar el último Grand Slam que le faltaba, pero no fue posible. Sinner fue el vencedor.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(4.483, 51.883, 'ATP 500 Róterdam', 'Campeón (venció a A. de Miñaur)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/ABN_AMRO_Open_foto_van_arena_voor_een_wedstrijd.jpg/330px-ABN_AMRO_Open_foto_van_arena_voor_een_wedstrijd.jpg')">
+        <h2>ATP 500 Róterdam</h2><p>Aunque es un torneo de menor categoría, el murciano rompió otro récord al ganar un título en cada superficie y otro bajo pista cubierta</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(51.512, 25.311, 'ATP 500 Doha', 'Cuartos de final (perdió ante Jiří Lehečka)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Khalifa_Tennis_and_Squash_Complex_in_Lekhwair.jpg/330px-Khalifa_Tennis_and_Squash_Complex_in_Lekhwair.jpg')">
+        <h2>ATP 500 Doha</h2><p>Volvieron las dudas. "No sé qué podría haber hecho mejor", dijo en la posterior rueda de prensa.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(-116.305, 33.724, 'Masters 1.000 Indian Wells', 'Semifinales (perdió contra Jack Drapper)', 'https://upload.wikimedia.org/wikipedia/commons/4/49/2143-0029_the-venue.jpg')">
+        <h2>Indian Wells</h2><p>El británico acabó de nuevo con una racha de victorias de Carlos Alcaraz.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(-80.238, 25.958, 'Masters 1.000 Miami', 'Cuartos de final (perdió contra David Goffin)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Serena_Williams-Carla_Su%C3%A1rez_Navarro_2015_Miami_Open.JPG/960px-Serena_Williams-Carla_Su%C3%A1rez_Navarro_2015_Miami_Open.JPG')">
+        <h2>Masters 1.000 Miami</h2><p>El belga, un experimentado del circuito, no dejó opciones pese a que Alcaraz ganó el primer set.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(7.439, 43.748, 'Masters 1.000 Montecarlo', 'Campeón (venció a Lorenzo Musetti)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/2018_Monte-Carlo_Masters_IMG_2719_%2841694885952%29.jpg/960px-2018_Monte-Carlo_Masters_IMG_2719_%2841694885952%29.jpg')">
+        <h2>Montecarlo</h2><p>Con el espíritu de Rafa Nadal, máximo campeón en este torneo, Alcaraz volvió a la senda de la victoria con un nuevo título.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(2.115, 41.393, 'ATP 500 Barcelona', 'Finalista (perdió contra Holger Rune)', 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Trofeo_Conde_de_Godo_2008.jpg')">
+        <h2>Barcelona</h2><p>En el Conde de Godó Alcaraz empezó a dar signos de cansancio acumulado. El resultado fue perder una final y, además, una lesión que le impidió estar en Madrid, próxima cita del calendario.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(12.454, 41.928, 'Masters 1.000 Roma', 'Campeón (venció a Jannik Sinner)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Il_Centrale_%28108607831%29.jpeg/960px-Il_Centrale_%28108607831%29.jpeg')">
+        <h2>Roma</h2><p>Tras el pertinente descanso, otra victoria en tierra y fundamental porque venció a Sinner en su casa, su máximo rival.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(2.249, 48.847, 'Roland Garros', 'Campeón (venció a Jannik Sinner)', 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Roland_Garros_02.JPG')">
+        <h2>Roland Garros</h2><p>Un partido que ya ha pasado a la historia del tenis, como hicieron Roger Federer y Rafa Nadal en Wimbledon en 2008. Cuando parecía todo perdido, Alcaraz conquistó la Copa de los Mosqueteros tras más de cinco horas de encuentro.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(-0.211, 51.488, 'ATP 500 Queen\'s Club', 'Campeón (venció a Jiri Lehecka)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/2025_Queens_Tennis.jpg/960px-2025_Queens_Tennis.jpg')">
+        <h2>Queen's Club</h2><p>El clásico torneo británico es esencial para la buena preparación hacia Wimbledon. Es el torneo que más se le parece.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(-0.214, 51.434, 'Wimbledon', 'Finalista (perdió contra Jannik Sinner)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/London_Centre_Court_Wimbledon_%2853284151591%29.jpg/960px-London_Centre_Court_Wimbledon_%2853284151591%29.jpg')">
+        <h2>Wimbledon</h2><p>En esta ocasión, la balanza se inclinó del italiano en un partido mucho menos competido.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(-84.272, 39.352, 'Masters 1.000 Cincinnati', 'Campeón (venció a Jannik Sinner)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Lindner_Family_Tennis_Center_2025.jpg/960px-Lindner_Family_Tennis_Center_2025.jpg')">
+        <h2>Cincinnati</h2><p>Una final agridulce. Sinner se retió en el primer set cuando Alcaraz ganaba 5-0.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(-73.846, 40.750, 'US Open', 'Campeón (venció a Jannik Sinner)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/US_OPEN_2019_%2848667665777%29.jpg/1280px-US_OPEN_2019_%2848667665777%29.jpg')">
+        <h2>US Open</h2><p>Otro partido memorable y segundo US Open para el de El Palmar. En esta ocasión venció con mucho menos sufrimiento y se aseguró el número 1 del mundo.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(139.789, 35.636, 'ATP 500 Tokio', 'Campeón (venció a Taylor Fritz)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Ariake_tennis_park.jpg/1280px-Ariake_tennis_park.jpg')">
+        <h2>ATP 500 Tokio</h2><p>El final de temporada siempre es momento para probarse, pero Alcaraz siguió con su racha de victorias.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(2.378, 48.838, 'Masters 1.000 París', 'Octavos de final (perdió contra Jannik Sinner)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Match_entre_Jack_Sock_et_Lucas_Pouille_au_Rolex_Paris_Masters_2017.jpg/960px-Match_entre_Jack_Sock_et_Lucas_Pouille_au_Rolex_Paris_Masters_2017.jpg?20180122150330')">
+        <h2>París</h2><p>Nadal no ha ganado nunca este torneo, Alcaraz sigue sin poder hacerlo.</p>
+    </div>
+    <div class="capitulo" onclick="presentarPunto(7.651, 45.041, 'ATP Finals', 'Finalista (perdió contra Jannik Sinner)', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/2014-11-12_2014_ATP_World_Tour_Finals_show_court_during_Marin_Cilic_vs_Thomas_Berdych_match_3_by_Michael_Frey.jpg/1280px-2014-11-12_2014_ATP_World_Tour_Finals_show_court_during_Marin_Cilic_vs_Thomas_Berdych_match_3_by_Michael_Frey.jpg')">
+        <h2>ATP Finals</h2><p>Era el broche de oro, pero no pudo ser.</p>
+    </div>
+</div>
+
+<div id="map"></div>
+
+<script>
+    const map = new maplibregl.Map({
+        container: 'map',
+        style: 'estilo.json', 
+        center: [0, 20],
+        zoom: 2
+    });
+
+    const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '300px' });
+
+    function presentarPunto(lon, lat, titulo, desc, img) {
+        // Mover el mapa
+        map.flyTo({ center: [lon, lat], zoom: 14, pitch: 40, essential: true });
+
+        // Crear el Tooltip con la imagen y descripción
+        const html = `
+            <img class="popup-img" src="${img}" onerror="this.src='https://via.placeholder.com/250x150?text=Foto+del+Estadio'">
+            <h3 style="margin:0; font-size:16px;">${titulo}</h3>
+            <p style="margin:5px 0 0; font-size:13px; color:#555;">${desc}</p>
+        `;
+
+        popup.setLngLat([lon, lat]).setHTML(html).addTo(map);
+    }
+</script>
+
+</body>
+</html>

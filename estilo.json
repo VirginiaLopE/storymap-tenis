@@ -1,0 +1,36 @@
+{
+  "version": 8,
+  "name": "estilo",
+  "metadata": {"maputnik:renderer": "mlgljs"},
+  "sources": {
+    "openmaptiles": {
+      "type": "vector",
+      "url": "https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL"
+    },
+    "2kowjjh": {"type": "vector", "url": "https://localhost:3000/tilejson.json"}
+  },
+  "sprite": "",
+  "glyphs": "https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "fondo",
+      "type": "background",
+      "paint": {"background-color": "rgba(201, 245, 178, 1)"}
+    },
+    {
+      "id": "agua",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "paint": {"fill-color": "rgba(143, 216, 206, 1)"}
+    },
+    {
+      "id": "frontera",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "boundary",
+      "paint": {"line-color": "rgba(166, 166, 166, 1)"}
+    }
+  ],
+  "id": "jyk49vh"
+}
